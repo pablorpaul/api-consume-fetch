@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiblioData - Busca de Livros</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>BiblioData</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Digite o título do livro ou autor...">
+            <button id="searchBtn">Buscar Livros</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="loading" class="hidden">Pesquisando na biblioteca...</div>
+        
+        <section id="bookList" class="movie-grid"></section>
+
+        <aside id="bookDetail" class="detail-panel hidden">
+            <button onclick="closeDetails()">Fechar X</button>
+            <div id="detailContent"></div>
+        </aside>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
