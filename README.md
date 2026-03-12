@@ -1,6 +1,6 @@
 # api-consume-fetch
 
-Consumo da API Ope Libraryatravés do fetch.
+Consumo da API Ope Library através do fetch.
 
 https://openlibrary.org/developers/api
 
