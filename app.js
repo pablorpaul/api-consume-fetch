@@ -5,14 +5,14 @@ const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const loading = document.getElementById('loading');
 
-// Função de busca na API
+// Função para buscar na API
 async function searchBooks(query) {
     try {
         loading.classList.remove('hidden');
         bookList.innerHTML = ''; // Limpa resultados anteriores
         
         // A API da Open Library usa query params para busca
-        const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12`);
+        const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=18`);
         
         if (!response.ok) throw new Error('Erro ao consultar a biblioteca');
         
@@ -25,7 +25,7 @@ async function searchBooks(query) {
     }
 }
 
-// Renderiza os livros
+// Renderiza os livros encontrados, buscando a imagem da capa
 function renderBooks(books) {
     if (books.length === 0) {
         bookList.innerHTML = '<p>Nenhum livro encontrado.</p>';
@@ -33,12 +33,12 @@ function renderBooks(books) {
     }
 
     books.forEach(book => {
-        // A API retorna um ID de capa (cover_i), se não tiver, usamos uma imagem padrão
+        // A API retorna um ID de capa (cover_i), caso não possua capa uma imagem padrão é colocada
         const coverUrl = book.cover_i 
-            ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` 
-            : 'https://via.placeholder.com/150x225?text=Sem+Capa';
+            ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+            : 'https://placehold.co/150x225?text=Sem+Capa';
 
-        const div = document.createElement('div');
+        const div = document.createElement('div'); //Cria os cards de livro
         div.classList.add('book-card');
         div.innerHTML = `
             <img src="${coverUrl}" alt="${book.title}">
@@ -50,7 +50,7 @@ function renderBooks(books) {
     });
 }
 
-// Mostra detalhes (requisito: seleção de item)
+// Mostra detalhes do livro quando um dos cards é clickado.
 function showDetail(book, coverUrl) {
     bookDetail.classList.remove('hidden');
     detailContent.innerHTML = `
@@ -58,7 +58,7 @@ function showDetail(book, coverUrl) {
         <h2>${book.title}</h2>
         <p><strong>Autor:</strong> ${book.author_name ? book.author_name.join(', ') : 'Não informado'}</p>
         <p><strong>Primeiro ano de publicação:</strong> ${book.first_publish_year || 'N/A'}</p>
-        <p><strong>Assuntos:</strong> ${book.subject ? book.subject.slice(0, 5).join(', ') : 'Informação não disponível'}.</p>
+        <p><strong>Publisher:</strong> ${book.publisher ? book.publisher.slice(0, 5).join(', ') : 'Informação não disponível'}.</p>
         <p><strong>ISBN disponível:</strong> ${book.isbn ? book.isbn[0] : 'N/A'}</p>
     `;
 }
@@ -68,13 +68,14 @@ function closeDetails() {
 }
 
 // Eventos de busca
+//Busca ao clicar no botão de buscar livros
 searchBtn.onclick = () => {
     if (searchInput.value) searchBooks(searchInput.value);
 };
-
-searchInput.onkeypress = (e) => {
+//Busca ao apertar a tecla enter e se tiver conteúdo na barra de pesquisa
+searchInput.addEventListener('keypress', function(e){
     if (e.key === 'Enter' && searchInput.value) searchBooks(searchInput.value);
-};
+});
 
-// Carregamento inicial (exemplo)
-searchBooks('JavaScript');
+// Ao carregar a página executa uma busca programada para página não ficar vazia.
+window.onload = searchBooks('JavaScript')
